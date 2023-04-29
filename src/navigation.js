@@ -20,6 +20,8 @@ window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
 
 function navigator() {
+    console.log("entra al navigator")
+
     if (location.hash.startsWith("#trending")) {
         trendingPage();
     } else if (location.hash.startsWith("#search=")) {
@@ -119,9 +121,14 @@ function getIdFromLocation() {
 
 
 function homePage() {
+
+    //quiere decir que esta en el home y no es necesario actualizar la pagina
+    const hash = location.hash.split('=')[0]
+    if (hash != '') {
+        location.hash = `#home`
+    }
+
     headerSection.style.background = '';
-    location.hash = `#home`
-    
     headerSection.classList.remove('header-container--long');
     headerSection.style.background = ''
     arrowBtn.classList.add('inactive');
@@ -162,7 +169,7 @@ async function getMovieByCategory(id, genderMovie = 'all') {
 async function renderTrendingMoviesSection() {
     const data = await getDataFromApi(`/trending/movie/week`);
     const results = data.results;
-    genericSection.innerHTML = ''
+    cleanSection(genericSection);
     results.forEach(movie => {
         createMovieElement(movie, genericSection);
     })

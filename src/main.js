@@ -3,6 +3,18 @@ const movieElement = document.querySelector('.trendingPreview-movieList');
 const categoryElement = document.querySelector('.categoriesPreview-list');
 */
 
+//lazy loader
+const lazyLoader = new IntersectionObserver((entries,observer) => {
+    entries.forEach((entry) => {
+        entry
+        if (entry.isIntersecting) {
+            const url = entry.target.getAttribute('data-img');
+            entry.target.src = url;
+            observer.unobserve(entry.target);
+        }
+    })
+})
+
 
 async function getDataFromApi(endpoint,optionalConfig = {}){
     const {data} = await instance.get(`${endpoint}`, optionalConfig);
@@ -13,6 +25,7 @@ async function showTrendingMovies(){
     const data = await getDataFromApi('/trending/movie/week');
     const movies = data.results;
 
+    cleanSection(trendingMoviesPreviewList);
     movies.forEach(movie => {
         createMovieElement(movie,trendingMoviesPreviewList);
     })
@@ -55,22 +68,24 @@ function createMovieElement(movie, insertUbication){
     movieContainer.classList.add('movie-container');
     const movieImg = document.createElement('img');
     movieImg.classList.add('movie-img');
-
+    movieImg.classList.add('backgrondImage-skeleton-img');
     movieContainer.addEventListener('click', () => {
         location.hash = `#movie=${movie.id}`
     })
 
     if (movie.poster_path !== null) { // check if poster_path is not null
-        movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+        movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
+        // movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
         movieImg.alt = movie.title;
     } else {
-        movieImg.src = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'; // set a default image source
+        movieImg.setAttribute('data-img', `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`);
+        // movieImg.src = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'; // set a default image source
         movieImg.alt = 'No image available'; // set a default alt text
     }
     movieImg.alt = movie.title;
+    lazyLoader.observe(movieImg);
+    
     movieContainer.appendChild(movieImg);
-
-    // trendingMoviesPreviewList.appendChild(movieContainer);
     insertUbication.appendChild(movieContainer);
 }
 

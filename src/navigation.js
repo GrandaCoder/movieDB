@@ -109,14 +109,14 @@ function categoryPage() {
     movieDetailSection.classList.add('inactive')
 
     const { idNumber, genderMovie } = getIdFromLocation();
-    getMovieByCategory(idNumber, genderMovie);
+    getMovieByCategory({idNumber, genderMovie, currentPage : 1, clean : true});
     // scrollToTop();
 }
 
 function getIdFromLocation() {
     const generalId = location.hash.split('=')[1];
     const [idNumber, genderMovie] = generalId.split('-');
-    return { idNumber, genderMovie };
+    return { idNumber, genderMovie};
 }
 
 
@@ -150,36 +150,42 @@ function isLoadedInfoAPI() {
     const childrenCategoriesPreview = Array.from(categoriesPreviewList.children);
     return childrenCategoriesPreview.length
 }
+//= {idNumber, genderMovie : 'all', currentPage : 1}
+async function getMovieByCategory(informacion) {
 
-async function getMovieByCategory(id, genderMovie = 'all', currentPage = 1) {
 
     const data = await getDataFromApi(`/discover/movie`, {
         params: {
-            with_genres: id,
-            page: currentPage
+            with_genres: informacion.idNumber,
+            page: informacion.currentPage
         }
     });
     const results = data.results;
-    genericSection.innerHTML = ''
-    headerCategoryTitle.innerHTML = genderMovie
+
+    if(informacion.clean){
+        console.log("entra al clean")
+        cleanSection(genericSection);
+    }
+
+    headerCategoryTitle.innerHTML = informacion.genderMovie
     results.forEach(movie => {
         createMovieElement(movie, genericSection);
     })
 
     //creamos un elemento de carga para que muestre el siguiente page
-    console.log('getMoviecategory');
-    loadNextPageIfPossible(currentPage+1, data, genericSection, getMovieByCategory);
+    loadNextPageIfPossible(informacion, data, genericSection, getMovieByCategory);
 }
 
-async function renderTrendingMoviesSection(currentPage = 1, clean = true) {
+//currentPage = 1, clean = true
+async function renderTrendingMoviesSection(informacion = {currentPage : 1, clean : true}) {
     const data = await getDataFromApi(`/trending/movie/week`, {
         params: {
-            page: currentPage
+            page: informacion.currentPage
         }
     });
     const results = data.results;
 
-    if (clean) {
+    if (informacion.clean) {
         cleanSection(genericSection);
     }
 
@@ -187,8 +193,9 @@ async function renderTrendingMoviesSection(currentPage = 1, clean = true) {
         createMovieElement(movie, genericSection);
     })
 
+    // informacion.clean = false
     //creamos un elemento de carga para que muestre el siguiente page
-    loadNextPageIfPossible(currentPage, data, genericSection, renderTrendingMoviesSection);
+    loadNextPageIfPossible(informacion, data, genericSection, renderTrendingMoviesSection);
 }
 
 // function loadNextPageIfPossible(currentPage, data, Section) {

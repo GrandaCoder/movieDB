@@ -52,12 +52,14 @@ async function getMovieBySearch(query) {
 }
 
 
-function loadNextPageIfPossible(currentPage, data, Section,fun) {
-    if (currentPage <= data.total_pages) {
+function loadNextPageIfPossible(informacion, data, Section,fun) {
+    const nextPage = informacion.currentPage + 1;
+
+    if (nextPage <= data.total_pages) {
       console.log('cargando siguiente page');
       const loadingElement = createLoadingElement();
       Section.appendChild(loadingElement);
-      loadNextPage(loadingElement, currentPage,fun);
+      loadNextPage(loadingElement, informacion,fun);
     }
   }
   
@@ -69,14 +71,17 @@ function createLoadingElement() {
     return divider;
 }
 
-function loadNextPage(endOfContainer,currentPage, fun) {
+function loadNextPage(endOfContainer,informacion, fun) {
     // const element = document.getElementById('mi-div');
 
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    fun(currentPage + 1, false);
+                    informacion.currentPage += 1;
+                    
+                    informacion.clean = false
+                    fun(informacion);
                     endOfContainer.remove();
                 }
             });

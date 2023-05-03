@@ -11,7 +11,7 @@ arrowBtn.addEventListener('click', () => {
     const hash = location.hash.split('=')[0];
     if (hash != '#search') {
         homePage();
-    }else{
+    } else {
         history.go(-2);
     }
 })
@@ -90,7 +90,7 @@ function moviePage() {
     genericSection.classList.add('inactive')
     movieDetailSection.classList.remove('inactive')
 
-    const {idNumber} = getIdFromLocation();
+    const { idNumber } = getIdFromLocation();
     getMovieById(idNumber);
 }
 
@@ -108,15 +108,15 @@ function categoryPage() {
     genericSection.classList.remove('inactive')
     movieDetailSection.classList.add('inactive')
 
-    const {idNumber,genderMovie} = getIdFromLocation();
-    getMovieByCategory(idNumber,genderMovie);
+    const { idNumber, genderMovie } = getIdFromLocation();
+    getMovieByCategory(idNumber, genderMovie);
     // scrollToTop();
 }
 
 function getIdFromLocation() {
     const generalId = location.hash.split('=')[1];
     const [idNumber, genderMovie] = generalId.split('-');
-    return {idNumber, genderMovie};
+    return { idNumber, genderMovie };
 }
 
 
@@ -151,27 +151,80 @@ function isLoadedInfoAPI() {
     return childrenCategoriesPreview.length
 }
 
-async function getMovieByCategory(id, genderMovie = 'all') {
+async function getMovieByCategory(id, genderMovie = 'all', currentPage = 1) {
 
     const data = await getDataFromApi(`/discover/movie`, {
         params: {
-            with_genres: id
+            with_genres: id,
+            page: currentPage
         }
     });
     const results = data.results;
     genericSection.innerHTML = ''
-    headerCategoryTitle .innerHTML = genderMovie
+    headerCategoryTitle.innerHTML = genderMovie
     results.forEach(movie => {
         createMovieElement(movie, genericSection);
     })
+
+    //creamos un elemento de carga para que muestre el siguiente page
+    console.log('getMoviecategory');
+    loadNextPageIfPossible(currentPage+1, data, genericSection, getMovieByCategory);
 }
 
-async function renderTrendingMoviesSection() {
-    const data = await getDataFromApi(`/trending/movie/week`);
+async function renderTrendingMoviesSection(currentPage = 1, clean = true) {
+    const data = await getDataFromApi(`/trending/movie/week`, {
+        params: {
+            page: currentPage
+        }
+    });
     const results = data.results;
-    cleanSection(genericSection);
+
+    if (clean) {
+        cleanSection(genericSection);
+    }
+
     results.forEach(movie => {
         createMovieElement(movie, genericSection);
     })
+
+    //creamos un elemento de carga para que muestre el siguiente page
+    loadNextPageIfPossible(currentPage, data, genericSection, renderTrendingMoviesSection);
 }
+
+// function loadNextPageIfPossible(currentPage, data, Section) {
+//     if (currentPage <= data.total_pages) {
+//       console.log('cargando siguiente page');
+//       const loadingElement = createLoadingElement();
+//       Section.appendChild(loadingElement);
+//       loadNextPage(loadingElement, currentPage);
+//     }
+//   }
+  
+
+// function createLoadingElement() {
+//     const divider = document.createElement('div');
+//     divider.classList.add('divider');
+//     divider.innerHTML = 'Loading more...';
+//     return divider;
+// }
+
+// function loadNextPage(endOfContainer,currentPage) {
+//     // const element = document.getElementById('mi-div');
+
+//     const observer = new IntersectionObserver(
+//         (entries) => {
+//             entries.forEach((entry) => {
+//                 if (entry.isIntersecting) {
+//                     renderTrendingMoviesSection(currentPage + 1, false);
+//                     endOfContainer.remove();
+//                 }
+//             });
+//         },
+//         {
+//             threshold: 1,
+//         }
+//     );
+
+//     observer.observe(endOfContainer);
+// }
 

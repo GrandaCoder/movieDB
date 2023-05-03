@@ -47,7 +47,49 @@ async function getMovieBySearch(query) {
     movies.forEach(movie => {
         createMovieElement(movie,genericSection);
     })
+
+
 }
+
+
+function loadNextPageIfPossible(currentPage, data, Section,fun) {
+    if (currentPage <= data.total_pages) {
+      console.log('cargando siguiente page');
+      const loadingElement = createLoadingElement();
+      Section.appendChild(loadingElement);
+      loadNextPage(loadingElement, currentPage,fun);
+    }
+  }
+  
+
+function createLoadingElement() {
+    const divider = document.createElement('div');
+    divider.classList.add('divider');
+    divider.innerHTML = 'Loading more...';
+    return divider;
+}
+
+function loadNextPage(endOfContainer,currentPage, fun) {
+    // const element = document.getElementById('mi-div');
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    fun(currentPage + 1, false);
+                    endOfContainer.remove();
+                }
+            });
+        },
+        {
+            threshold: 1,
+        }
+    );
+
+    observer.observe(endOfContainer);
+}
+
+
 
 function cleanSection(section){
     section.innerHTML = '';
@@ -60,6 +102,7 @@ async function showCategories(){
     categories.forEach(category => {
         createCategoryElement(category,categoriesPreviewList);
     })
+
 }
 
 //crea un elemento de categoria para renderizar

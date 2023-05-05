@@ -1,3 +1,4 @@
+//--- general listeners
 searchFormBtn.addEventListener('click', () => {
     location.hash = `#search=${searchFormInput.value}`
 })
@@ -17,6 +18,8 @@ arrowBtn.addEventListener('click', () => {
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
+
+//--- end listeners
 
 function navigator() {
     const hash = location.hash;
@@ -117,13 +120,6 @@ function categoryPage() {
 
     const { idNumber, genderMovie } = getIdFromLocation();
     getMovieByCategory({ idNumber, genderMovie, page: 1, clean: true });
-    // scrollToTop();
-}
-
-function getIdFromLocation() {
-    const generalId = location.hash.split('=')[1];
-    const [idNumber, genderMovie] = generalId.split('-');
-    return { idNumber, genderMovie };
 }
 
 
@@ -150,47 +146,8 @@ function homePage() {
     getLikedMovies();
 }
 
-function isLoadedInfoAPI() {
-    return categoriesPreviewList.children.length;
-}
 
 
-async function getMovieByCategory(informacion) {
-    const data = await getDataFromApi(`/discover/movie`, {
-        params: {
-            with_genres: informacion.idNumber,
-            page: informacion.page
-        }
-    });
 
-    const results = data.results;
-    if (informacion.clean) {
-        console.log("entra al clean")
-        cleanSection(genericSection);
-    }
-
-    headerCategoryTitle.innerHTML = informacion.genderMovie
-    results.forEach(movie => createMovieElement(movie, genericSection));
-    loadNextPageIfPossible(informacion, data, genericSection, getMovieByCategory);
-}
-
-async function renderTrendingMoviesSection(informacion = { page: 1, clean: true }) {
-    const data = await getDataFromApi(`/trending/movie/week`, {
-        params: {
-            page: informacion.page
-        }
-    });
-    const results = data.results;
-
-    if (informacion.clean) {
-        cleanSection(genericSection);
-    }
-
-    results.forEach(movie => {
-        createMovieElement(movie, genericSection);
-    })
-
-    loadNextPageIfPossible(informacion, data, genericSection, renderTrendingMoviesSection);
-}
 
 

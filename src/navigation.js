@@ -7,7 +7,6 @@ trendingBtn.addEventListener('click', () => {
 })
 
 arrowBtn.addEventListener('click', () => {
-    // get location hast 
     const hash = location.hash.split('=')[0];
     if (hash != '#search') {
         homePage();
@@ -20,31 +19,37 @@ window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
 
 function navigator() {
-    console.log("entra al navigator")
+    const hash = location.hash;
+    console.log("entra al navigator");
 
-    if (location.hash.startsWith("#trending")) {
-        trendingPage();
-    } else if (location.hash.startsWith("#search=")) {
-        searchPage();
-    } else if (location.hash.startsWith("#movie=")) {
-        moviePage();
-    } else if (location.hash.startsWith("#category=")) {
-        categoryPage();
-    } else {
-        homePage();
+    switch (true) {
+        case hash.startsWith("#trending"):
+            trendingPage();
+            break;
+        case hash.startsWith("#search="):
+            searchPage();
+            break;
+        case hash.startsWith("#movie="):
+            moviePage();
+            break;
+        case hash.startsWith("#category="):
+            categoryPage();
+            break;
+        default:
+            homePage();
     }
-
     scrollToTop();
 }
 
 
+
 function trendingPage() {
-    headerSection.classList.remove('header-container--long');
     headerSection.style.background = ''
+    headerSection.classList.remove('header-container--long');
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.remove('header-arrow--white')
-    headerTitle.classList.add('inactive');
     headerCategoryTitle.classList.remove('inactive');
+    headerTitle.classList.add('inactive');
     searchForm.classList.add('inactive')
 
     likedMoviesSection.classList.add('inactive')
@@ -54,7 +59,6 @@ function trendingPage() {
     movieDetailSection.classList.add('inactive')
 
     renderTrendingMoviesSection();
-    // scrollToTop();
 }
 
 function searchPage() {
@@ -73,14 +77,13 @@ function searchPage() {
     movieDetailSection.classList.add('inactive')
 
     const query = location.hash.split('=')[1];
-    getMovieBySearch({query, currentPage : 1, clean : true});
+    searchMovies({ query, page: 1, clean: true });
 }
 
 
 
 function moviePage() {
     headerSection.classList.add('header-container--long');
-    // headerSection.style.background = ''
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.add('header-arrow--white')
     headerTitle.classList.add('inactive');
@@ -113,38 +116,32 @@ function categoryPage() {
     movieDetailSection.classList.add('inactive')
 
     const { idNumber, genderMovie } = getIdFromLocation();
-    getMovieByCategory({idNumber, genderMovie, currentPage : 1, clean : true});
+    getMovieByCategory({ idNumber, genderMovie, page: 1, clean: true });
     // scrollToTop();
 }
 
 function getIdFromLocation() {
     const generalId = location.hash.split('=')[1];
     const [idNumber, genderMovie] = generalId.split('-');
-    return { idNumber, genderMovie};
+    return { idNumber, genderMovie };
 }
 
 
 function homePage() {
-
-    //quiere decir que esta en el home y no es necesario actualizar la pagina
-    const hash = location.hash.split('=')[0]
-    if (hash != '') {
-        location.hash = `#home`
-    }
+    const hash = location.hash.split('=')[0];
+    if (hash) location.hash = '#home';
 
     headerSection.style.background = '';
     headerSection.classList.remove('header-container--long');
-    headerSection.style.background = ''
     arrowBtn.classList.add('inactive');
     headerTitle.classList.remove('inactive');
     headerCategoryTitle.classList.add('inactive');
-    searchForm.classList.remove('inactive')
-
-    likedMoviesSection.classList.remove('inactive')
-    trendingPreviewSection.classList.remove('inactive')
-    categoriesPreviewSection.classList.remove('inactive')
-    genericSection.classList.add('inactive')
-    movieDetailSection.classList.add('inactive')
+    searchForm.classList.remove('inactive');
+    likedMoviesSection.classList.remove('inactive');
+    trendingPreviewSection.classList.remove('inactive');
+    categoriesPreviewSection.classList.remove('inactive');
+    genericSection.classList.add('inactive');
+    movieDetailSection.classList.add('inactive');
 
     if (!isLoadedInfoAPI()) {
         showTrendingMovies();
@@ -154,40 +151,33 @@ function homePage() {
 }
 
 function isLoadedInfoAPI() {
-    const childrenCategoriesPreview = Array.from(categoriesPreviewList.children);
-    return childrenCategoriesPreview.length
+    return categoriesPreviewList.children.length;
 }
-//= {idNumber, genderMovie : 'all', currentPage : 1}
+
+
 async function getMovieByCategory(informacion) {
-
-
     const data = await getDataFromApi(`/discover/movie`, {
         params: {
             with_genres: informacion.idNumber,
-            page: informacion.currentPage
+            page: informacion.page
         }
     });
-    const results = data.results;
 
-    if(informacion.clean){
+    const results = data.results;
+    if (informacion.clean) {
         console.log("entra al clean")
         cleanSection(genericSection);
     }
 
     headerCategoryTitle.innerHTML = informacion.genderMovie
-    results.forEach(movie => {
-        createMovieElement(movie, genericSection);
-    })
-
-    //creamos un elemento de carga para que muestre el siguiente page
+    results.forEach(movie => createMovieElement(movie, genericSection));
     loadNextPageIfPossible(informacion, data, genericSection, getMovieByCategory);
 }
 
-//currentPage = 1, clean = true
-async function renderTrendingMoviesSection(informacion = {currentPage : 1, clean : true}) {
+async function renderTrendingMoviesSection(informacion = { page: 1, clean: true }) {
     const data = await getDataFromApi(`/trending/movie/week`, {
         params: {
-            page: informacion.currentPage
+            page: informacion.page
         }
     });
     const results = data.results;
@@ -200,8 +190,6 @@ async function renderTrendingMoviesSection(informacion = {currentPage : 1, clean
         createMovieElement(movie, genericSection);
     })
 
-    // informacion.clean = false
-    //creamos un elemento de carga para que muestre el siguiente page
     loadNextPageIfPossible(informacion, data, genericSection, renderTrendingMoviesSection);
 }
 

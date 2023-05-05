@@ -1,8 +1,3 @@
-/*
-const movieElement = document.querySelector('.trendingPreview-movieList');
-const categoryElement = document.querySelector('.categoriesPreview-list');
-*/
-
 //lazy loader
 const lazyLoader = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
@@ -19,9 +14,15 @@ const lazyLoader = new IntersectionObserver((entries, observer) => {
 
 
 async function getDataFromApi(endpoint, optionalConfig = {}) {
-    const { data } = await instance.get(`${endpoint}`, optionalConfig);
-    return data;
-};
+    try {
+        const response = await instance.get(endpoint, optionalConfig);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 
 async function showTrendingMovies() {
     const data = await getDataFromApi('/trending/movie/week');
@@ -29,53 +30,37 @@ async function showTrendingMovies() {
 
     cleanSection(trendingMoviesPreviewList);
     movies.forEach(movie => {
-        createMovieElement(movie,trendingMoviesPreviewList);
+        createMovieElement(movie, trendingMoviesPreviewList);
     })
-    // renderSection(movies, trendingMoviesPreviewList);
 }
 
-// function renderSection(datos, section) {
-//     cleanSection(section);
-//     datos.forEach(dato => {
-//         createMovieElement(dato, section);
-//     })
-// }
-
-async function getMovieBySearch(informacion = { query, clean, currentPage }) {
+async function searchMovies(informacion = { query, clean, page }) {
 
     console.log("query:" + informacion.query);
 
     const data = await getDataFromApi(`/search/movie`, {
         params: {
             query: informacion.query,
-            page: informacion.currentPage
+            page: informacion.page
         }
     })
-
     const movies = data.results;
 
     if (informacion.clean) {
-        console.log("Limpiando")
         cleanSection(genericSection);
     }
-    // cleanSection(genericSection);
+
     movies.forEach(movie => {
         createMovieElement(movie, genericSection);
     })
 
-    //creamos un elemento de carga para que muestre el siguiente page
-    loadNextPageIfPossible(informacion, data, genericSection, getMovieBySearch);
-
+    loadNextPageIfPossible(informacion, data, genericSection, searchMovies);
 }
 
 
 function loadNextPageIfPossible(informacion, data, Section, fun) {
-    const nextPage = informacion.currentPage + 1;
-
-    console.log("total pages:" + data.total_pages);
-
+    const nextPage = informacion.page + 1;
     if (nextPage <= data.total_pages) {
-        console.log('cargando siguiente page');
         const loadingElement = createLoadingElement();
         Section.appendChild(loadingElement);
         loadNextPage(loadingElement, informacion, fun);
@@ -86,19 +71,18 @@ function loadNextPageIfPossible(informacion, data, Section, fun) {
 function createLoadingElement() {
     const divider = document.createElement('div');
     divider.classList.add('divider');
-    divider.innerHTML = 'Loading more...';
+    const textNode = document.createTextNode('Loading more...');
+    divider.appendChild(textNode);
     return divider;
-}
+  }
+  
 
 function loadNextPage(endOfContainer, informacion, fun) {
-    // const element = document.getElementById('mi-div');
-
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    informacion.currentPage += 1;
-
+                    informacion.page += 1;
                     informacion.clean = false
                     fun(informacion);
                     endOfContainer.remove();
@@ -116,8 +100,11 @@ function loadNextPage(endOfContainer, informacion, fun) {
 
 
 function cleanSection(section) {
-    section.innerHTML = '';
+    while (section.firstChild) {
+        section.removeChild(section.firstChild);
+    }
 }
+
 
 //carga las listas de las categorias
 async function showCategories() {
@@ -133,45 +120,46 @@ async function showCategories() {
 function createMovieElement(movie, insertUbication) {
     const movieContainer = document.createElement('div');
     movieContainer.classList.add('movie-container');
+
     const movieImg = document.createElement('img');
     movieImg.classList.add('movie-img');
     movieImg.classList.add('backgrondImage-skeleton-img');
 
-
-    if (movie.poster_path !== null) { // check if poster_path is not null
-        movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
-        // movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+    if (movie.poster_path !== null) {
+        movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
         movieImg.alt = movie.title;
     } else {
-        movieImg.setAttribute('data-img', `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`);
-        // movieImg.src = 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'; // set a default image source
-        movieImg.alt = 'No image available'; // set a default alt text
+        movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
+        movieImg.alt = 'No image available';
     }
+
+    movieImg.setAttribute('data-img', movieImg.src);
 
     const movieButton = document.createElement('button');
     movieButton.classList.add('movie-btn');
 
-    likedMoviesList()[movie.id] && movieButton.classList.add('movie-button--liked');
+    if (likedMoviesList()[movie.id]) {
+        movieButton.classList.add('movie-button--liked');
+    }
 
     movieButton.addEventListener('click', () => {
         movieButton.classList.toggle('movie-button--liked');
-        //todo
         likeMovie(movie);
         getLikedMovies();
-        // homePage();
         showTrendingMovies();
-    })
+    });
 
     movieImg.addEventListener('click', () => {
-        location.hash = `#movie=${movie.id}`
-    })
+        location.hash = `#movie=${movie.id}`;
+    });
 
-    movieImg.alt = movie.title;
     lazyLoader.observe(movieImg);
+
     movieContainer.appendChild(movieImg);
     movieContainer.appendChild(movieButton);
     insertUbication.appendChild(movieContainer);
 }
+
 
 //crea las listas
 function createCategoryElement(category, toInsertIn) {
@@ -241,8 +229,6 @@ function getLikedMovies() {
     movieArray.forEach(movie => {
         createMovieElement(movie, likedMoviesContainer);
     })
-
-    // showTrendingMovies();
 }
 
 

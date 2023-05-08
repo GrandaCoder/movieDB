@@ -49,6 +49,7 @@ function trendingPage() {
     getNode.genericSection.classList.remove('inactive')
     getNode.movieDetailSection.classList.add('inactive')
 
+    getNode.headerCategoryTitle.textContent = 'Trending';
     renderTrendingMoviesSection();
 }
 

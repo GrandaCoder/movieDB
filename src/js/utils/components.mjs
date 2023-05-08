@@ -5,7 +5,13 @@ import {
      trendingMoviesPreviewList, 
      genericSection,
      likedMoviesContainer,
-     categoriesPreviewList
+     categoriesPreviewList,
+     movieDetailTitle,
+     movieDetailDescription,
+     movieDetailScore,
+     movieDetailCategoriesList,
+     relatedMoviesContainer
+
 } from './getNodes.mjs';
 
 import {
@@ -166,7 +172,7 @@ async function getMovieByCategory(informacion) {
 }
 
 async function renderTrendingMoviesSection(informacion = { page: 1, clean: true }) {
-    const data = await getDataFromApi(`/trending/movie/week`, {
+    const data = await getDataFromApi(`/trending/movie/day`, {
         params: {
             page: informacion.page
         }

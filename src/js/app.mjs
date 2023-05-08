@@ -2,21 +2,25 @@ import {
     navigator,
     homePage
 } from "./routes/navigation.mjs";
-import * as getNode from "./utils/getNodes.mjs";
+import {searchFormBtn,
+    searchFormInput, 
+    trendingBtn,
+    arrowBtn
+} from "./utils/getNodes.mjs";
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
 
 //--- general listeners
-getNode.searchFormBtn.addEventListener('click', () => {
-    location.hash = `#search=${getNode.searchFormInput.value}`
+searchFormBtn.addEventListener('click', () => {
+    location.hash = `#search=${searchFormInput.value}`
 })
 
-getNode.trendingBtn.addEventListener('click', () => {
+trendingBtn.addEventListener('click', () => {
     location.hash = '#trending'
 })
 
-getNode.arrowBtn.addEventListener('click', () => {
+arrowBtn.addEventListener('click', () => {
     const hash = location.hash.split('=')[0];
     if (hash != '#search') {
         homePage();

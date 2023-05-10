@@ -5,6 +5,7 @@ function likeMovie(movie){
       likedMovies[movie.id] = movie;
     }else{
       delete likedMovies[movie.id];
+      
     }
     const likedMoviesJSON = JSON.stringify(likedMovies); // almacenamos el valor devuelto en una variable
     localStorage.setItem('likedMovies', likedMoviesJSON);

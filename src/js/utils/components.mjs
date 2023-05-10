@@ -23,6 +23,10 @@ import{
     getDataFromApi,
 } from './getData.mjs';
 
+import {
+    playSound
+} from './sounds.mjs';
+
 function createMovieElement(movie, insertUbication) {
     const movieContainer = document.createElement('div');
     movieContainer.classList.add('movie-container');
@@ -30,15 +34,29 @@ function createMovieElement(movie, insertUbication) {
     movieImg.classList.add('movie-img');
     movieImg.classList.add('backgrondImage-skeleton-img');
 
-    if (movie.poster_path !== null) {
-        movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
-        movieImg.alt = movie.title;
-    } else {
-        movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
-        movieImg.alt = 'No image available';
-    }
+    try {
+        movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
+        movieImg.classList.add('fade-in');
+        movieImg.addEventListener('load', () => {
+          movieImg.classList.add('loaded');
+        });
+      } catch (error) {
+         movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
+         movieImg.alt = 'No image available';
+      }
+    
 
-    movieImg.setAttribute('data-img', movieImg.src);
+    
+    // if (movie.poster_path == null) {
+    //     movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
+    //     movieImg.alt = 'No image available';
+    // } else {
+    //     movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
+    //     movieImg.alt = movie.title;
+    // }
+    // movieImg.setAttribute('data-img', movieImg.src);
+
+
     movieImg.addEventListener('click', () => {
         location.hash = `#movie=${movie.id}`;
     });
@@ -56,6 +74,9 @@ function createMovieElement(movie, insertUbication) {
         likeMovie(movie);
         getLikedMovies();
         searchTrendingMovies();
+
+        const source = `/src/sounds/like.mp3`;
+        playSound(source);
     });
 
     lazyLoader.observe(movieImg);
@@ -64,6 +85,8 @@ function createMovieElement(movie, insertUbication) {
     movieContainer.appendChild(movieButton);
     insertUbication.appendChild(movieContainer);
 }
+
+//function that reproduces a sound from a source
 
 function createCategoryElement(category, toInsertIn) {
     const categoryContainer = document.createElement('div');

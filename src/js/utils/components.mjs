@@ -1,16 +1,16 @@
 import { lazyLoader, loadNextPage } from './lazyloading.mjs';
 import {
-     headerCategoryTitle, 
-     headerSection, 
-     trendingMoviesPreviewList, 
-     genericSection,
-     likedMoviesContainer,
-     categoriesPreviewList,
-     movieDetailTitle,
-     movieDetailDescription,
-     movieDetailScore,
-     movieDetailCategoriesList,
-     relatedMoviesContainer
+    headerCategoryTitle,
+    headerSection,
+    trendingMoviesPreviewList,
+    genericSection,
+    likedMoviesContainer,
+    categoriesPreviewList,
+    movieDetailTitle,
+    movieDetailDescription,
+    movieDetailScore,
+    movieDetailCategoriesList,
+    relatedMoviesContainer
 
 } from './getNodes.mjs';
 
@@ -19,7 +19,7 @@ import {
     likeMovie
 } from './favoriteMovies.mjs';
 
-import{
+import {
     getDataFromApi,
 } from './getData.mjs';
 
@@ -34,18 +34,15 @@ function createMovieElement(movie, insertUbication) {
     movieImg.classList.add('movie-img');
     movieImg.classList.add('backgrondImage-skeleton-img');
 
-    try {
+    if (movie.poster_path === null) {
+        movieImg.setAttribute('data-img', `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`);
+    } else {
         movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
         movieImg.classList.add('fade-in');
         movieImg.addEventListener('load', () => {
-          movieImg.classList.add('loaded');
+            movieImg.classList.add('loaded');
         });
-      } catch (error) {
-         movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
-         movieImg.alt = 'No image available';
-      }
-    
-
+    }
     
     // if (movie.poster_path == null) {
     //     movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
@@ -256,7 +253,7 @@ function isLoadedInfoAPI(category) {
 }
 
 
-export  {
+export {
     renderTrendingMoviesSection,
     searchMovies,
     getMovieById,

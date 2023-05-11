@@ -11,6 +11,7 @@ export const trendingMoviesPreviewList = document.querySelector('.trendingPrevie
 export const categoriesPreviewList = document.querySelector('.categoriesPreview-list');
 export const movieDetailCategoriesList = document.querySelector('#movieDetail .categories-list');
 export const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
+export const inputSearch = document.querySelector('#inputsearch');
 
 //liked movies section
 export const likedMoviesSection = document.querySelector('#liked');
@@ -27,5 +28,4 @@ export const movieDetailDescription = document.querySelector('.movieDetail-descr
 export const movieDetailScore = document.querySelector('.movieDetail-score');
 
 // favoritos 
-
 export const likedMoviesContainer = document.querySelector('.liked-movieList');

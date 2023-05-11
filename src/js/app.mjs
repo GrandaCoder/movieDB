@@ -5,7 +5,7 @@ import {
 import {searchFormBtn,
     searchFormInput, 
     trendingBtn,
-    arrowBtn
+    arrowBtn,
 } from "./utils/getNodes.mjs";
 
 window.addEventListener('DOMContentLoaded', navigator, false);

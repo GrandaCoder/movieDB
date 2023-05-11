@@ -10,7 +10,8 @@ import {
     movieDetailDescription,
     movieDetailScore,
     movieDetailCategoriesList,
-    relatedMoviesContainer
+    relatedMoviesContainer,
+    inputSearch
 
 } from './getNodes.mjs';
 
@@ -34,25 +35,20 @@ function createMovieElement(movie, insertUbication) {
     movieImg.classList.add('movie-img');
     movieImg.classList.add('backgrondImage-skeleton-img');
 
-    if (movie.poster_path === null) {
-        movieImg.setAttribute('data-img', `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`);
-    } else {
-        movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
-        movieImg.classList.add('fade-in');
-        movieImg.addEventListener('load', () => {
-            movieImg.classList.add('loaded');
-        });
+    try {        
+        if (movie.poster_path === null) {
+            console.log(movie.title);
+            movieImg.setAttribute('data-img', `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`);
+        } else {
+            movieImg.setAttribute('data-img', `https://image.tmdb.org/t/p/w300${movie.poster_path}`);
+            movieImg.classList.add('fade-in');
+            movieImg.addEventListener('load', () => {
+                movieImg.classList.add('loaded');
+            });
+        }
+    } catch (error) {
+        return;
     }
-    
-    // if (movie.poster_path == null) {
-    //     movieImg.src = `https://via.placeholder.com/300x450/5c218a/ffffff?text=${movie.title}`;
-    //     movieImg.alt = 'No image available';
-    // } else {
-    //     movieImg.src = `https://image.tmdb.org/t/p/w300${movie.poster_path}`;
-    //     movieImg.alt = movie.title;
-    // }
-    // movieImg.setAttribute('data-img', movieImg.src);
-
 
     movieImg.addEventListener('click', () => {
         location.hash = `#movie=${movie.id}`;
@@ -102,25 +98,26 @@ function createCategoryElement(category, toInsertIn) {
 }
 
 function createMovieDetail(movie) {
-
-    const movieUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+    const { poster_path, title, overview, vote_average, genres } = movie;
+    const movieUrl = `https://image.tmdb.org/t/p/w500${poster_path}`;
+  
     headerSection.style.background = `
-    linear-gradient(
+      linear-gradient(
         180deg, 
         rgba(0, 0, 0, 0.35) 19.27%, 
         rgba(0, 0, 0, 0) 29.17%
-        ),
-    url(${movieUrl})`;
-
-    movieDetailTitle.textContent = movie.title;
-    movieDetailDescription.textContent = movie.overview;
-    movieDetailScore.textContent = movie.vote_average;
-    const generos = movie.genres;
+      ),
+      url(${movieUrl})`;
+  
+    movieDetailTitle.textContent = title;
+    movieDetailDescription.textContent = overview;
+    movieDetailScore.textContent = vote_average;
+  
     cleanSection(movieDetailCategoriesList);
-    generos.forEach(genero => {
-        createCategoryElement(genero, movieDetailCategoriesList)
-    })
-}
+    genres.forEach(genero => {
+      createCategoryElement(genero, movieDetailCategoriesList);
+    });
+  }
 
 // render elements
 
@@ -136,8 +133,16 @@ async function searchTrendingMovies() {
 
     cleanSection(trendingMoviesPreviewList);
     renderElements(movies, trendingMoviesPreviewList, createMovieElement);
+    renderMostseachedMovie(movies, inputSearch);
 }
 
+function renderMostseachedMovie(movies, inputSearch) {
+    if(movies.length === 0) {
+        inputSearch.placeholder = "No se encontraron resultados";
+    }else{
+        inputSearch.placeholder = movies[0].title;
+    }
+}
 
 async function searchCategories() {
     const data = await getDataFromApi('/genre/movie/list');
@@ -156,6 +161,13 @@ async function searchMovies(informacion = { query, clean, page }) {
         }
     })
     const movies = data.results;
+
+    if(movies.length === 0) {
+        inputSearch.placeholder = "No se encontraron resultados";
+    }else{
+        inputSearch.value = informacion.query;
+    }
+
     cleanSection(genericSection, informacion.clean);
     renderElements(movies, genericSection, createMovieElement);
     loadNextPageIfPossible(informacion, data, genericSection, searchMovies);
@@ -251,6 +263,8 @@ function getIdFromLocation() {
 function isLoadedInfoAPI(category) {
     return category.children.length;
 }
+
+
 
 
 export {

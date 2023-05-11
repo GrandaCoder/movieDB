@@ -522,6 +522,16 @@ select option {
   justify-content: space-between;
 }
 
+/* .searchForm-language{
+  display: flex;
+  flex-direction: column;
+} */
+
+.searchlanguage{
+  display: flex;
+  flex-direction: column;
+}
+
 
 @keyframes skeleton-loading {
   0% {

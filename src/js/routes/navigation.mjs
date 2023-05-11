@@ -42,6 +42,8 @@ function trendingPage() {
     getNode.headerCategoryTitle.classList.remove('inactive');
     getNode.headerTitle.classList.add('inactive');
     getNode.searchForm.classList.add('inactive')
+    getNode.searchFormLanguage.classList.add('inactive')
+    getNode.searchFormLanguage.classList.remove('searchlanguage')
 
     getNode.likedMoviesSection.classList.add('inactive')
     getNode.trendingPreviewSection.classList.add('inactive')
@@ -61,6 +63,8 @@ function searchPage() {
     getNode.headerTitle.classList.add('inactive');
     getNode.headerCategoryTitle.classList.add('inactive');
     getNode.searchForm.classList.remove('inactive')
+    getNode.searchFormLanguage.classList.add('inactive')
+    getNode.searchFormLanguage.classList.remove('searchlanguage')
 
     getNode.likedMoviesSection.classList.add('inactive')
     getNode.trendingPreviewSection.classList.add('inactive')
@@ -81,6 +85,8 @@ function moviePage() {
     getNode.headerTitle.classList.add('inactive');
     getNode.headerCategoryTitle.classList.add('inactive');
     getNode.searchForm.classList.add('inactive')
+    getNode.searchFormLanguage.classList.add('inactive')
+    getNode.searchFormLanguage.classList.remove('searchlanguage')
 
     getNode.likedMoviesSection.classList.add('inactive')
     getNode.trendingPreviewSection.classList.add('inactive')
@@ -100,6 +106,8 @@ function categoryPage() {
     getNode.headerTitle.classList.add('inactive');
     getNode.headerCategoryTitle.classList.remove('inactive');
     getNode.searchForm.classList.remove('inactive')
+    getNode.searchFormLanguage.classList.add('inactive')
+    getNode.searchFormLanguage.classList.remove('searchlanguage')
 
     getNode.likedMoviesSection.classList.add('inactive')
     getNode.trendingPreviewSection.classList.add('inactive')
@@ -127,6 +135,8 @@ function homePage() {
     getNode.categoriesPreviewSection.classList.remove('inactive');
     getNode.genericSection.classList.add('inactive');
     getNode.movieDetailSection.classList.add('inactive');
+    getNode.searchFormLanguage.classList.remove('inactive')
+    getNode.searchFormLanguage.classList.add('searchlanguage')
 
     if (!isLoadedInfoAPI(getNode.categoriesPreviewList)) {
         searchTrendingMovies();

@@ -19,6 +19,7 @@ export const categoriesPreviewtitle = document.querySelector('.categoriesPreview
 export const likedtitle = document.querySelector('.liked-title');
 export const footer = document.querySelector('#footer-text');
 export const relatedMoviestitle = document.querySelector('.relatedMovies-title');
+export const searchFormLanguage = document.querySelector('#searchFormLanguage');
 
 //liked movies section
 export const likedMoviesSection = document.querySelector('#liked');

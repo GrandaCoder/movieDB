@@ -6,12 +6,26 @@ import {searchFormBtn,
     searchFormInput, 
     trendingBtn,
     arrowBtn,
+    selectLanguage
 } from "./utils/getNodes.mjs";
+
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
 
-//--- general listeners
+//-- load language
+const previouslySelectedLanguage = localStorage.getItem('language');
+if (previouslySelectedLanguage) {
+    selectLanguage.value = previouslySelectedLanguage;
+}
+selectLanguage.addEventListener('change', (event) => {
+    const selectedLanguage = event.target.value;
+    localStorage.setItem('language', selectedLanguage);
+    location.reload();
+});
+let language = previouslySelectedLanguage || 'es';
+
+
 searchFormBtn.addEventListener('click', () => {
     location.hash = `#search=${searchFormInput.value}`
 })
@@ -31,10 +45,12 @@ arrowBtn.addEventListener('click', () => {
 //--- end listeners
 
 const API_KEY = '54aae79ca27848ab627616cec3c45480';
+
 const instance = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
   params: {
-    api_key: API_KEY
+    api_key: API_KEY,
+    language: language
   }
 });
 

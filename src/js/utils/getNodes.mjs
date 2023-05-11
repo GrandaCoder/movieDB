@@ -12,7 +12,7 @@ export const categoriesPreviewList = document.querySelector('.categoriesPreview-
 export const movieDetailCategoriesList = document.querySelector('#movieDetail .categories-list');
 export const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
 export const inputSearch = document.querySelector('#inputsearch');
-
+export const selectLanguage = document.querySelector('#selectLanguage');
 //liked movies section
 export const likedMoviesSection = document.querySelector('#liked');
 

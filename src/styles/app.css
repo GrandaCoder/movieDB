@@ -225,7 +225,7 @@ footer,
 .trendingPreview-btn {
   border-radius: 8px;
   height: 32px;
-  width: 72px;
+  width: 100px;
 }
 
 .trendingPreview-movieList,
@@ -515,6 +515,11 @@ select option {
   padding: 5px;
   background-color: #f1f1f1;
   border: 1px solid #ccc;
+}
+
+.header-container-title{
+  display: flex;
+  justify-content: space-between;
 }
 
 

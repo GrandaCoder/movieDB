@@ -15,16 +15,18 @@
 <body>
     <header id="header" class="header-container">
         <span class="header-arrow inactive">&lt;</span>
-        <div class="container">
+        <div class="header-container-title">
           <h1 class="header-title">MoviesDB</h1>
-
           <form>
-            <label for="idioma">idioma:</label>
+            <label id="labelSelectLanguage" for="idioma"></label>
             <select id="selectLanguage" name="idioma" id="idioma">
-              <option value="es" >Español</option>
-              <option value="en" >Inglés</option>
-              <option value="fr">Francés</option>
-              <option value="de">Alemán</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="zh">中文</option>
+              <option value="ar">العربية</option>
+              <option value="pt">Português</option>
+              <option value="ru">Русский</option>
+              <option value="ja">日本語</option>
             </select>
           </form>
         </div>
@@ -109,8 +111,8 @@
         </article>
       </section>
     
-      <footer>Created by Camilo Granda</footer>
-
+      <footer>
+        <p id="footer-text"> </p></footer>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="src/js/app.mjs"></script>
 </body>

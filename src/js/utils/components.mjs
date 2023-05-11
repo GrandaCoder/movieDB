@@ -27,6 +27,11 @@ import {
 import {
     playSound
 } from './sounds.mjs';
+import { getTranslation } from '../language/selectLanguage.mjs';
+
+import {
+    language
+} from '../app.mjs';
 
 function createMovieElement(movie, insertUbication) {
     const movieContainer = document.createElement('div');
@@ -138,7 +143,7 @@ async function searchTrendingMovies() {
 
 function renderMostseachedMovie(movies, inputSearch) {
     if(movies.length === 0) {
-        inputSearch.placeholder = "No se encontraron resultados";
+        inputSearch.placeholder = getTranslation(language,"noResults");
     }else{
         inputSearch.placeholder = movies[0].title;
     }
@@ -163,7 +168,7 @@ async function searchMovies(informacion = { query, clean, page }) {
     const movies = data.results;
 
     if(movies.length === 0) {
-        inputSearch.placeholder = "No se encontraron resultados";
+        inputSearch.placeholder = getTranslation(language,"noResults");
     }else{
         inputSearch.value = informacion.query;
     }

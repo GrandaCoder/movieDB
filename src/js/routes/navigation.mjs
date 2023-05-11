@@ -49,7 +49,7 @@ function trendingPage() {
     getNode.genericSection.classList.remove('inactive')
     getNode.movieDetailSection.classList.add('inactive')
 
-    getNode.headerCategoryTitle.textContent = 'Trending';
+   // getNode.headerCategoryTitle.textContent = 'Trending';
     renderTrendingMoviesSection();
 }
 
@@ -113,10 +113,6 @@ function categoryPage() {
 
 
 function homePage() {
-
-    // const selectedLanguage = getNode.selectLanguage.options[getNode.selectLanguage.selectedIndex]; 
-    // console.log(selectedLanguage);
-
     const hash = location.hash.split('=')[0];
     if (hash) location.hash = '#home';
 

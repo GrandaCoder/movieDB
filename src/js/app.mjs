@@ -6,9 +6,19 @@ import {searchFormBtn,
     searchFormInput, 
     trendingBtn,
     arrowBtn,
-    selectLanguage
+    selectLanguage,
+    labelSelectLanguage,
+    trendingPreviewTitle,
+    categoriesPreviewtitle,
+    likedtitle,
+    footer,
+    headerCategoryTitle,
+    relatedMoviestitle
 } from "./utils/getNodes.mjs";
 
+import {
+    getTranslation
+} from "./language/selectLanguage.mjs";
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
@@ -23,7 +33,18 @@ selectLanguage.addEventListener('change', (event) => {
     localStorage.setItem('language', selectedLanguage);
     location.reload();
 });
+
 let language = previouslySelectedLanguage || 'es';
+
+labelSelectLanguage.textContent = getTranslation(language, "selectLanguage");
+trendingBtn.textContent = getTranslation(language, "loadMore");
+trendingPreviewTitle.textContent = getTranslation(language, "trends");
+headerCategoryTitle.textContent = getTranslation(language, "trends");
+categoriesPreviewtitle.textContent = getTranslation(language, "categorys");
+likedtitle.textContent = getTranslation(language, "favoritesMovies");
+footer.textContent = getTranslation(language, "author");
+relatedMoviestitle.textContent = getTranslation(language, "relatedMovies");
+
 
 
 searchFormBtn.addEventListener('click', () => {
@@ -54,5 +75,5 @@ const instance = axios.create({
   }
 });
 
-export {instance}
+export {instance, language};
 

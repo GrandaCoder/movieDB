@@ -13,6 +13,13 @@ export const movieDetailCategoriesList = document.querySelector('#movieDetail .c
 export const relatedMoviesContainer = document.querySelector('.relatedMovies-scrollContainer');
 export const inputSearch = document.querySelector('#inputsearch');
 export const selectLanguage = document.querySelector('#selectLanguage');
+export const labelSelectLanguage = document.querySelector('#labelSelectLanguage');
+export const trendingPreviewTitle = document.querySelector('.trendingPreview-title');
+export const categoriesPreviewtitle = document.querySelector('.categoriesPreview-title');
+export const likedtitle = document.querySelector('.liked-title');
+export const footer = document.querySelector('#footer-text');
+export const relatedMoviestitle = document.querySelector('.relatedMovies-title');
+
 //liked movies section
 export const likedMoviesSection = document.querySelector('#liked');
 

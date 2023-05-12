@@ -4,7 +4,7 @@ Se basa en mostrar una una interfaz que se comunique con una API pública para c
 
 ## **Estado actual**
 
-Proyecto actualmente producción. Url del proyecto: [platzi-movies.netlify.app]().
+Proyecto actualmente producción. Url del proyecto: [Click aquí](https://grandacoder.github.io/movieDB/).
 
 ## **Maquetación del proyecto** 
 

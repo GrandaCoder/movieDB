@@ -35,7 +35,6 @@ selectLanguage.addEventListener('change', (event) => {
 });
 
 let language = previouslySelectedLanguage || 'es';
-
 labelSelectLanguage.textContent = getTranslation(language, "selectLanguage");
 trendingBtn.textContent = getTranslation(language, "loadMore");
 trendingPreviewTitle.textContent = getTranslation(language, "trends");
@@ -44,8 +43,6 @@ categoriesPreviewtitle.textContent = getTranslation(language, "categorys");
 likedtitle.textContent = getTranslation(language, "favoritesMovies");
 footer.textContent = getTranslation(language, "author");
 relatedMoviestitle.textContent = getTranslation(language, "relatedMovies");
-
-
 
 searchFormBtn.addEventListener('click', () => {
     location.hash = `#search=${searchFormInput.value}`
@@ -65,6 +62,7 @@ arrowBtn.addEventListener('click', () => {
 })
 //--- end listeners
 
+// please use your own API key from https://developers.themoviedb.org this is for demo purpose
 const API_KEY = '54aae79ca27848ab627616cec3c45480';
 
 const instance = axios.create({

@@ -1,4 +1,3 @@
-//---- lazy loaders
 const lazyLoader = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
         entry
@@ -29,6 +28,4 @@ function loadNextPage(endOfContainer, informacion, fun) {
 
     observer.observe(endOfContainer);
 }
-//--- end lazy loaders
-
 export { loadNextPage, lazyLoader }

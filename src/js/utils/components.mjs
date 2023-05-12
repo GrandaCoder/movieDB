@@ -84,8 +84,6 @@ function createMovieElement(movie, insertUbication) {
     insertUbication.appendChild(movieContainer);
 }
 
-//function that reproduces a sound from a source
-
 function createCategoryElement(category, toInsertIn) {
     const categoryContainer = document.createElement('div');
     categoryContainer.classList.add('category-container');
@@ -124,7 +122,6 @@ function createMovieDetail(movie) {
     });
   }
 
-// render elements
 
 function renderElements(elementos, seccion, funcion) {
     elementos.forEach(elemento => {
@@ -254,8 +251,17 @@ function getLikedMovies() {
     const likedMovies = likedMoviesList();
     const movieArray = Object.values(likedMovies);
 
-    cleanSection(likedMoviesContainer);
-    renderElements(movieArray, likedMoviesContainer, createMovieElement);
+    if(hasLikedMovies(movieArray)) {
+        likedMoviesContainer.classList.remove('inactive');
+        cleanSection(likedMoviesContainer);
+        renderElements(movieArray, likedMoviesContainer, createMovieElement);
+    }else{
+        likedMoviesContainer.classList.add('inactive');
+    }
+}
+
+function hasLikedMovies(array) {
+    return array.length > 0;
 }
 
 

@@ -50,8 +50,6 @@ function trendingPage() {
     getNode.categoriesPreviewSection.classList.add('inactive')
     getNode.genericSection.classList.remove('inactive')
     getNode.movieDetailSection.classList.add('inactive')
-
-   // getNode.headerCategoryTitle.textContent = 'Trending';
     renderTrendingMoviesSection();
 }
 

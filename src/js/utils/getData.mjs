@@ -10,5 +10,4 @@ async function getDataFromApi(endpoint, optionalConfig = {}) {
     }
 }
 
-
 export { getDataFromApi };
